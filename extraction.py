@@ -1,7 +1,7 @@
 import os
 import numpy as np
 from PIL import Image
-from descripteurs import glcm_rgb, haralick_rgb, bit_rgb, fusion
+from descriptors import glcm_rgb, haralick_rgb, bit_rgb, fusion
 from utils.image_loader import load_and_preprocess_image
 
 dict_class = {
@@ -10,41 +10,41 @@ dict_class = {
   'iris-virginica': 2
 }
 
-def extraction_signatures(chemin_repertoire):
+def extract_signatures(directory_path):
   
-  list_glcm = []
-  list_haralick = []
-  list_bit = []
-  list_fusion = []
+  glcm_list = []
+  haralick_list = []
+  bit_list = []
+  fusion_list = []
 
-  for root, _, files in os.walk(chemin_repertoire):
+  for root, _, files in os.walk(directory_path):
     for file in files:
       if file.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp')):
-        chemin = os.path.join(root, file)
-        relative_path = os.path.relpath(chemin, chemin_repertoire)
+        file_path = os.path.join(root, file)
+        relative_path = os.path.relpath(file_path, directory_path)
 
-        img_pil = Image.open(chemin).convert("RGB")
+        img_pil = Image.open(file_path).convert("RGB")
         img_np = load_and_preprocess_image(img_pil)
 
-        list_glcm.append(glcm_rgb.extract_features(img_np))
-        list_haralick.append(haralick_rgb.extract_features(img_np))
-        list_bit.append(bit_rgb.extract_features(img_np))
-        list_fusion.append(fusion.extract_features(img_np))
+        glcm_list.append(glcm_rgb.extract_features(img_np))
+        haralick_list.append(haralick_rgb.extract_features(img_np))
+        bit_list.append(bit_rgb.extract_features(img_np))
+        fusion_list.append(fusion.extract_features(img_np))
 
-        print(f"Signatures extraites pour: {relative_path}")
+        print(f"Features extracted for: {relative_path}")
 
-  print("\nVérification des dimensions :")
-  print(f"GLCM: {len(list_glcm[0]) if list_glcm else 0} features")
-  print(f"Haralick: {len(list_haralick[0]) if list_haralick else 0} features")
-  print(f"BiT: {len(list_bit[0]) if list_bit else 0} features")
-  print(f"Fusion: {len(list_fusion[0]) if list_fusion else 0} features")
+  print("\nDimension verification:")
+  print(f"GLCM: {len(glcm_list[0]) if glcm_list else 0} features")
+  print(f"Haralick: {len(haralick_list[0]) if haralick_list else 0} features")
+  print(f"BiT: {len(bit_list[0]) if bit_list else 0} features")
+  print(f"Fusion: {len(fusion_list[0]) if fusion_list else 0} features")
 
-  np.save("signatures/GLCM_RGB.npy", list_glcm)
-  np.save("signatures/Haralick_RGB.npy", list_haralick)
-  np.save("signatures/BiT_RGB.npy", list_bit)
-  np.save("signatures/Fusion.npy", list_fusion)
+  np.save("signatures/GLCM_RGB.npy", glcm_list)
+  np.save("signatures/Haralick_RGB.npy", haralick_list)
+  np.save("signatures/BiT_RGB.npy", bit_list)
+  np.save("signatures/Fusion.npy", fusion_list)
 
-  print("\nSignatures et métadonnées enregistrées avec succès !")
+  print("\nFeatures and metadata successfully saved!")
 
 if __name__ == "__main__":
-  extraction_signatures("./data/dataset/")
+  extract_signatures("./data/dataset/")

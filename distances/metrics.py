@@ -1,18 +1,18 @@
 import numpy as np
 from scipy.spatial.distance import euclidean, cityblock, chebyshev, canberra
 
-def get_similar_images(query, base, method="euclidienne", top_k=5):
+def get_similar_images(query, base, method="euclidean", top_k=5):
   dists = []
   for idx, feat in enumerate(base):
-    if method == "euclidienne":
+    if method == "euclidean":
       dist = euclidean(query, feat)
     elif method == "manhattan":
       dist = cityblock(query, feat)
-    elif method == "tchebychev":
+    elif method == "chebyshev":
       dist = chebyshev(query, feat)
     elif method == "canberra":
       dist = canberra(query, feat)
     else:
-      raise ValueError("Méthode non supportée")
+      raise ValueError("Unsupported method")
     dists.append((idx, dist))
   return sorted(dists, key=lambda x: x[1])[:top_k]

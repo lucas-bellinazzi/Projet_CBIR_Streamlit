@@ -1,4 +1,4 @@
-# Projet : Développement d'une Application Web pour la Recherche d'Images Basée sur le Contenu (CBIR)
+# Project: Content-Based Image Retrieval (CBIR) Web Application
 
 ## Project Structure
 
@@ -33,4 +33,4 @@ streamlit run app.py
 # GitHub Repository
 
 You can find the source code for this project on GitHub:
-[Projet CBIR Streamlit](https://github.com/lucas-ladeira/Projet_CBIR_Streamlit)
+[Streamlit CBIR Project](https://github.com/lucas-ladeira/Projet_CBIR_Streamlit)

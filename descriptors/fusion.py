@@ -1,4 +1,4 @@
-from descripteurs import glcm_rgb, haralick_rgb, bit_rgb
+from descriptors import glcm_rgb, haralick_rgb, bit_rgb
 import numpy as np
 
 def extract_features(image):
