@@ -16,6 +16,7 @@ def extract_signatures(directory_path):
   haralick_list = []
   bit_list = []
   fusion_list = []
+  paths_list = []
 
   for root, _, files in os.walk(directory_path):
     for file in files:
@@ -30,6 +31,7 @@ def extract_signatures(directory_path):
         haralick_list.append(haralick_rgb.extract_features(img_np))
         bit_list.append(bit_rgb.extract_features(img_np))
         fusion_list.append(fusion.extract_features(img_np))
+        paths_list.append(relative_path)
 
         print(f"Features extracted for: {relative_path}")
 
@@ -43,6 +45,7 @@ def extract_signatures(directory_path):
   np.save("signatures/Haralick_RGB.npy", haralick_list)
   np.save("signatures/BiT_RGB.npy", bit_list)
   np.save("signatures/Fusion.npy", fusion_list)
+  np.save("signatures/paths.npy", paths_list)
 
   print("\nFeatures and metadata successfully saved!")
 

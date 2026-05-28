@@ -18,7 +18,7 @@ distance = st.selectbox("Distance metric", ["Euclidean", "Manhattan", "Chebyshev
 # -- Search
 if uploaded_file:
   img = Image.open(uploaded_file).convert("RGB")
-  st.image(img, caption="Query image", width="stretch")
+  st.image(img, caption="Query image", use_container_width=True)
 
   with st.spinner("Searching..."):
     # Preprocessing and extraction
@@ -38,7 +38,8 @@ if uploaded_file:
       base = np.load("signatures/Fusion.npy", allow_pickle=True)
 
     vector_np = np.array(vector)
-    base_np = np.array([x[:-2] for x in base])
+    base_np = np.array(base)
+    paths = np.load("signatures/paths.npy", allow_pickle=True)
 
     if vector_np.shape[0] != base_np.shape[1]:
       st.error(f"""
@@ -59,6 +60,7 @@ if uploaded_file:
   st.subheader("Similar Results")
   cols = st.columns(num_images)
   for i, (idx, score) in enumerate(results):
-    img_path = f"data/dataset/img_{idx}.jpg"
+    relative_img_path = paths[idx].replace("\\", "/")
+    img_path = f"data/dataset/{relative_img_path}"
     with cols[i]:
       st.image(img_path, caption=f"Score: {score:.2f}", use_container_width=True)
