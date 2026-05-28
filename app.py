@@ -18,7 +18,7 @@ distance = st.selectbox("Mesure de distance", ["Euclidienne", "Manhattan", "Tche
 # -- Recherche
 if uploaded_file:
   img = Image.open(uploaded_file).convert("RGB")
-  st.image(img, caption="Image recherchée", use_column_width=True)
+  st.image(img, caption="Image recherchée", width="stretch")
 
   with st.spinner("Recherche en cours..."):
     # Prétraitement et extraction
@@ -26,19 +26,34 @@ if uploaded_file:
 
     if descripteur == "GLCM":
       vector = glcm_rgb.extract_features(query)
-      base = np.load("Signatures/GLCM_RGB.npy")
+      base = np.load("Signatures/GLCM_RGB.npy", allow_pickle=True)
     elif descripteur == "Haralick":
       vector = haralick_rgb.extract_features(query)
-      base = np.load("Signatures/Haralick_RGB.npy")
+      base = np.load("Signatures/Haralick_RGB.npy", allow_pickle=True)
     elif descripteur == "BiT":
       vector = bit_rgb.extract_features(query)
-      base = np.load("Signatures/BiT_RGB.npy")
+      base = np.load("Signatures/BiT_RGB.npy", allow_pickle=True)
     else:
       vector = fusion.extract_features(query)
-      base = np.load("Signatures/Fusion.npy")
+      base = np.load("Signatures/Fusion.npy", allow_pickle=True)
+
+    vector_np = np.array(vector)
+    base_np = np.array([x[:-2] for x in base])
+
+    if vector_np.shape[0] != base_np.shape[1]:
+      st.error(f"""
+        ERREUR: Dimensions incohérentes
+        Descripteur: {descripteur}
+        Requête: {vector_np.shape[0]} features
+        Base: {base_np.shape[1]} features
+      """)
+      min_dim = min(vector_np.shape[0], base_np.shape[1])
+      vector_np = vector_np[:min_dim]
+      base_np = base_np[:, :min_dim]
+      st.warning(f"Utilisation des premières {min_dim} features seulement")
 
     # Recherche des plus proches
-    results = get_similar_images(vector, base, method=distance.lower(), top_k=nb_images)
+    results = get_similar_images(vector_np, base_np, method=distance.lower(), top_k=nb_images)
 
   # -- Affichage des résultats
   st.subheader("Résultats Similaires")
@@ -46,4 +61,4 @@ if uploaded_file:
   for i, (idx, score) in enumerate(results):
     img_path = f"data/dataset/img_{idx}.jpg"
     with cols[i]:
-      st.image(img_path, caption=f"Score: {score:.2f}", use_column_width=True)
+      st.image(img_path, caption=f"Score: {score:.2f}", use_container_width=True)

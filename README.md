@@ -33,3 +33,4 @@ streamlit run app.py
 # GitHub Repository
 
 You can find the source code for this project on GitHub:
+[Projet CBIR Streamlit](https://github.com/lucas-ladeira/Projet_CBIR_Streamlit)
